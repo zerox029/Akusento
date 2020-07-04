@@ -1,26 +1,33 @@
-rma = new RakutenMA(model_ja);
-rma.featset = RakutenMA.default_featset_ja;
-rma.hash_func = RakutenMA.create_hash_func(15);
+const containsJapanese = (text) => {
+  const regex = /[\u3000-\u303F]|[\u3040-\u309F]|[\u30A0-\u30FF]|[\uFF00-\uFFEF]|[\u4E00-\u9FAF]|[\u2605-\u2606]|[\u2190-\u2195]|\u203B/g;
+  return regex.test(text);
+}
 
-var tokens = rma.tokenize(HanZenKaku.hs2fs(HanZenKaku.hw2fw(HanZenKaku.h2z("これはペンです"))));
-console.log(tokens);
+const removeFurigana = () => {
+  var furigana = document.getElementsByTagName('rt');
 
-/*
-markTextAccents(document.body);
-console.log("Dwes");
+  if(furigana.length === 0) return;
 
-function markTextAccents(element) {
-  if(element.hasChildNodes()) 
+  while(furigana[0])
+    furigana[0].remove();
+}
+
+const markTextAccents = (element) => {
+  var p = document.getElementsByTagName('p');
+
+  for(var i = 0; i < p.length; i++)
   {
-    element.childNodes.forEach(markTextAccents);
-  } 
-  else if (element.nodeType === Text.TEXT_NODE) 
-  {
-    if(element.textContent.match(/replace/gi)) {
-      const newElement = document.createElement('span');
-      newElement.innerHTML = element.textContent.replace(/(replace)/gi, '<span class="heiban">$1</span>');
-      
-      element.replaceWith(newElement);
-    }
+    if(containsJapanese(p[i].textContent))
+      console.log(p[i].textContent);
   }
-}*/
+
+  /*
+  if(containsJapanese(element.textContent))
+  {
+    console.log("Found: ", element.textContent);
+    //console.log(rma.tokenize(HanZenKaku.hs2fs(HanZenKaku.hw2fw(HanZenKaku.h2z(element.textContent)))));
+  }*/
+}
+
+removeFurigana();
+markTextAccents();

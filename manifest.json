@@ -1,0 +1,29 @@
+{
+	"manifest_version": 2,
+
+	"name": "akusento",
+	"version": "0.0.1",
+	"description": "Colors japanese words according to their pitch accent",
+
+	"permissions": ["storage"],
+
+	"icons": { 
+		"48": "images/icon48.png",
+		"128": "images/icon128.png" 
+	},
+
+	"browser_action": {
+    "default_icon": "images/icon48.png"
+	},
+	
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["rakutenma/rakutenma.js",
+						 "rakutenma/model_ja.js",
+						 "rakutenma/hanzenkaku.js",
+				 		 "akusento.js"],
+			"css": ["pitch_color.css"]
+		}
+	]
+}

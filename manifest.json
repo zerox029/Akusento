@@ -5,8 +5,6 @@
 	"version": "0.0.1",
 	"author": "Étienne Plante",
 	"description": "Colors japanese words according to their pitch accent",
-	"default_locale": "en",
-	
 
 	"permissions": ["storage"],
 
@@ -26,9 +24,9 @@
 						 "rakutenma/model_ja.js",
 						 "rakutenma/hanzenkaku.js",
 						 "data/dict.js",
-						 "tokenizer.js",
-				 		 "akusento.js"],
-			"css": ["pitch_color.css"]
+						 "src/tokenizer.js",
+				 		 "src/akusento.js"],
+			"css": ["src/pitch_color.css"]
 		}
 	]
 }

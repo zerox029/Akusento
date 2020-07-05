@@ -50,21 +50,21 @@ const tagWordAccent = (word) => {
 const markTextAccents = (element) => {
   let paragraphs = document.getElementsByTagName('p');
   
-  for(p in paragraphs)
+  for(var i = 0; i < paragraphs.length; i++)
   {
-    let tokens = tokenize(p.textContent);
+    let tokens = tokenize(paragraphs[i].textContent);
   
     let newHtml = ''
-    for(var i = 0; i < tokens.length; i++)
+    for(var j = 0; j < tokens.length; j++)
     {
       //If the token is a noun
-      if(tokens[i][1].startsWith('N'))
-        newHtml += tagWordAccent(tokens[i][0]);
+      if(tokens[j][1].startsWith('N'))
+        newHtml += tagWordAccent(tokens[j][0]);
       else
-        newHtml += tokens[i][0];
+        newHtml += tokens[j][0];
     }
   
-    p.innerHTML = newHtml
+    paragraphs[i].innerHTML = newHtml
   }
 }
 

@@ -3,7 +3,10 @@
 
 	"name": "akusento",
 	"version": "0.0.1",
+	"author": "Étienne Plante",
 	"description": "Colors japanese words according to their pitch accent",
+	"default_locale": "en",
+	
 
 	"permissions": ["storage"],
 

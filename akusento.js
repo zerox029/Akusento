@@ -12,11 +12,18 @@ const removeFurigana = () => {
     furigana[0].remove();
 }
 
+const getDictionnaryEntry = (word) => {
+  entry = dict.find(entry => entry.kanji === "出来る");
+
+  return entry ? entry : null;
+}
+
 const markTextAccents = (element) => {
   var p = document.getElementsByTagName('p');
 
   for(var i = 0; i < p.length; i++)
   {
+    
     if(containsJapanese(p[i].textContent))
       console.log(p[i].textContent);
   }

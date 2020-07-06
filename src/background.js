@@ -1,26 +1,40 @@
-let on = false;
-
+let isOn = false;
 chrome.storage.sync.set({
   showAccents: false
 })
 
-chrome.tabs.onActivated.addListener((activeInfo) => {
-  toggleAccentsOnTab(activeInfo.tabId);
-})
+const setListeners = () => {
+  chrome.tabs.onActivated.addListener((activeInfo) => {
+    toggleAccentsOnTab(activeInfo.tabId);
+  })
+  
+  chrome.tabs.onUpdated.addListener((activeInfo) => {
+    toggleAccentsOnTab(activeInfo.tabId);
+  })
+  
+  chrome.browserAction.onClicked.addListener(() => {
+    isOn = !isOn;
+  
+    chrome.storage.sync.set({
+      showAccents: isOn
+    });
+  
+    setBadge();
+    chrome.tabs.query({currentWindow: true}, (tabs) => {
+      tabs.forEach((tab) => {
+        toggleAccentsOnTab(tab.id);
+      });
+    });  
+  })
+}
 
-chrome.tabs.onUpdated.addListener((activeInfo) => {
-  toggleAccentsOnTab(activeInfo.tabId);
-})
-
-chrome.browserAction.onClicked.addListener(() => {
-  on = !on;
-
-  chrome.storage.sync.set({
-    showAccents: on
-  });
-
-  toggleAccentsOnTab(activeInfo.tabId);
-})
+const setBadge = () => {
+  const text = isOn ? 'ON' : ''; 
+  if(chrome.browserAction.setBadgeText) {
+    chrome.browserAction.setBadgeBackgroundColor({color: "#f24438"})
+    chrome.browserAction.setBadgeText({text});
+  }
+}
 
 const loadDependencies = (id) => {
   ///TODO: Find a better way to do this
@@ -66,18 +80,18 @@ const loadDependencies = (id) => {
 }
 
 const toggleAccentsOnTab = (id) => {
-  chrome.storage.sync.get(['showAccents'], (res) => { 
-    if(res.value)
-    {
-      loadDependencies(id);
-  
-      chrome.tabs.executeScript(id, {
-        file: 'src/akusento.js'
-      }, () => {
-        if(chrome.runtime.lastError) {
-          console.log(chrome.runtime.lastError.message);
-        }
-      });
-    }
-  });
+  if(isOn)
+  {
+    loadDependencies(id);
+
+    chrome.tabs.executeScript(id, {
+      file: 'src/akusento.js'
+    }, () => {
+      if(chrome.runtime.lastError) {
+        console.log(chrome.runtime.lastError.message);
+      }
+    });
+  }
 }
+
+setListeners();

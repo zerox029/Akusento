@@ -82,6 +82,7 @@ function removeTextAccents() {
 }
 
 chrome.storage.onChanged.addListener(function(changes) {
+  console.log("ds");
   if ('showAccents' in changes && changes.showAccents.newValue === true) {
     removeFurigana();
     markTextAccents();

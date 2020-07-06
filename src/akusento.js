@@ -1,5 +1,5 @@
 const containsJapanese = (text) => {
-  const regex = /[\u3000-\u303F]|[\u3040-\u309F]|[\u30A0-\u30FF]|[\uFF00-\uFFEF]|[\u4E00-\u9FAF]|[\u2605-\u2606]|[\u2190-\u2195]|\u203B/g;
+  const regex = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/g;
   return regex.test(text);
 }
 
@@ -52,19 +52,22 @@ const markTextAccents = (element) => {
   
   for(var i = 0; i < paragraphs.length; i++)
   {
-    let tokens = tokenize(paragraphs[i].textContent);
-  
-    let newHtml = ''
-    for(var j = 0; j < tokens.length; j++)
+    if(containsJapanese(paragraphs[i].textContent))
     {
-      //If the token is a noun
-      if(tokens[j][1].startsWith('N'))
-        newHtml += tagWordAccent(tokens[j][0]);
-      else
-        newHtml += tokens[j][0];
-    }
+      let tokens = tokenize(paragraphs[i].textContent);
   
-    paragraphs[i].innerHTML = newHtml
+      let newHtml = ''
+      for(var j = 0; j < tokens.length; j++)
+      {
+        //If the token is a noun
+        if(tokens[j][1].startsWith('N'))
+          newHtml += tagWordAccent(tokens[j][0]);
+        else
+          newHtml += tokens[j][0];
+      }
+    
+      paragraphs[i].innerHTML = newHtml
+    }
   }
 }
 

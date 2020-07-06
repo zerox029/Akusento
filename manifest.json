@@ -6,7 +6,7 @@
 	"author": "Étienne Plante",
 	"description": "Colors japanese words according to their pitch accent",
 
-	"permissions": ["storage"],
+	"permissions": ["storage", "tabs", "*://*/*"],
 
 	"icons": { 
 		"16": "images/icon16.png",
@@ -18,15 +18,13 @@
     "default_icon": "images/icon48.png"
 	},
 	
+	"background": {
+		"scripts": ["src/background.js"]
+	},
+
 	"content_scripts": [
 		{
 			"matches": ["<all_urls>"],
-			"js": ["rakutenma/rakutenma.js",
-						 "rakutenma/model_ja.js",
-						 "rakutenma/hanzenkaku.js",
-						 "data/dict.js",
-						 "src/tokenizer.js",
-				 		 "src/akusento.js"],
 			"css": ["src/pitch_color.css"]
 		}
 	]

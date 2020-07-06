@@ -68,5 +68,7 @@ const markTextAccents = (element) => {
   }
 }
 
-removeFurigana();
-markTextAccents();
+chrome.storage.sync.get(['showAccents'], (result) => {
+  removeFurigana();
+  markTextAccents();
+})

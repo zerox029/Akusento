@@ -4,6 +4,14 @@ chrome.storage.sync.set({
   showAccents: false
 })
 
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  toggleAccentsOnTab(activeInfo.tabId);
+})
+
+chrome.tabs.onUpdated.addListener((activeInfo) => {
+  toggleAccentsOnTab(activeInfo.tabId);
+})
+
 chrome.browserAction.onClicked.addListener(() => {
   on = !on;
 
@@ -11,11 +19,7 @@ chrome.browserAction.onClicked.addListener(() => {
     showAccents: on
   });
 
-  chrome.tabs.query({currentWindow: true}, (tabs) => {
-    tabs.forEach((tab) => {
-      applyStylesheetToTab(tab.id);
-    });
-  });  
+  toggleAccentsOnTab(activeInfo.tabId);
 })
 
 const loadDependencies = (id) => {
@@ -61,14 +65,19 @@ const loadDependencies = (id) => {
   });
 }
 
-const applyStylesheetToTab = (id) => {
-  loadDependencies(id);
+const toggleAccentsOnTab = (id) => {
+  chrome.storage.sync.get(['showAccents'], (res) => { 
+    if(res.value)
+    {
+      loadDependencies(id);
   
-  chrome.tabs.executeScript(id, {
-    file: 'src/akusento.js'
-  }, () => {
-    if(chrome.runtime.lastError) {
-      console.log(chrome.runtime.lastError.message);
+      chrome.tabs.executeScript(id, {
+        file: 'src/akusento.js'
+      }, () => {
+        if(chrome.runtime.lastError) {
+          console.log(chrome.runtime.lastError.message);
+        }
+      });
     }
   });
 }

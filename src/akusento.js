@@ -1,9 +1,9 @@
-const containsJapanese = (text) => {
-  const regex = /[\u3000-\u303F]|[\u3040-\u309F]|[\u30A0-\u30FF]|[\uFF00-\uFFEF]|[\u4E00-\u9FAF]|[\u2605-\u2606]|[\u2190-\u2195]|\u203B/g;
+function containsJapanese(text) {
+  const regex = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]/g;
   return regex.test(text);
 }
 
-const removeFurigana = () => {
+function removeFurigana () {
   let furigana = document.getElementsByTagName('rt');
 
   if(furigana.length === 0) return;
@@ -12,19 +12,19 @@ const removeFurigana = () => {
     furigana[0].remove();
 }
 
-const getDictionnaryEntryFromKanji = (word) => {
+function getDictionnaryEntryFromKanji(word) {
   let entry = dict.find(entry => entry.kanji === word);
 
   return entry ? entry : null;
 }
 
-const getDictionnaryEntryFromPronunciation = (word) => {
+function getDictionnaryEntryFromPronunciation(word) {
   let entry = dict.find(entry => entry.pronunciation === word);
 
   return entry ? entry : null;
 }
 
-const getPitchPattern = (pitchMora, wordLength) => {
+function getPitchPattern (pitchMora, wordLength) {
   if(pitchMora === 0)
     return "heiban";
   else if(pitchMora === 1)
@@ -35,7 +35,7 @@ const getPitchPattern = (pitchMora, wordLength) => {
     return "nakadaka";
 }
 
-const tagWordAccent = (word) => {
+function tagWordAccent(word) {
   let dictEntry = getDictionnaryEntryFromKanji(word) || getDictionnaryEntryFromPronunciation(word);
 
   if(dictEntry)
@@ -47,7 +47,7 @@ const tagWordAccent = (word) => {
     return word;
 }
 
-const markTextAccents = (element) => {
+function markTextAccents (element) {
   let paragraphs = document.getElementsByTagName('p');
   
   for(var i = 0; i < paragraphs.length; i++)
@@ -68,5 +68,24 @@ const markTextAccents = (element) => {
   }
 }
 
-removeFurigana();
-markTextAccents();
+function removeTextAccents() {
+  let colored = document.querySelectorAll(".heiban, .atamadaka, .nakadaka, .odaka, .kifuku");
+
+  for(var i = 0; i < colored.length; i++)
+  {
+    colored[i].classList.remove("heiban");
+    colored[i].classList.remove("atamadaka");
+    colored[i].classList.remove("nakadaka");
+    colored[i].classList.remove("odaka");
+    colored[i].classList.remove("kifuku");
+  }
+}
+
+chrome.storage.onChanged.addListener(function(changes) {
+  if ('showAccents' in changes && changes.showAccents.newValue === true) {
+    removeFurigana();
+    markTextAccents();
+  } else {
+    removeTextAccents();
+  }
+});
